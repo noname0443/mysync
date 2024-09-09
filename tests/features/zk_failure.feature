@@ -19,7 +19,7 @@ Feature: mysync handles zookeeper lost
     When I run command on host "mysql1"
         """
            mysql -s --skip-column-names -e "SELECT (CASE WHEN count(*) = 0 THEN 'OK' ELSE 'HAS_USER_QUERIES' END)
-                            FROM information_schema.PROCESSLIST p
+                            FROM performance_schema.processlist p
                             WHERE USER NOT IN ('admin', 'monitor', 'event_scheduler', 'repl')"
         """
     Then command output should match regexp
@@ -101,7 +101,7 @@ Feature: mysync handles zookeeper lost
     And I wait for "5" seconds
     When I run command on host "mysql1"
     """
-       mysql -s --skip-column-names -e "SELECT state FROM information_schema.PROCESSLIST"
+       mysql -s --skip-column-names -e "SELECT state FROM performance_schema.processlist"
     """
     Then command output should match regexp
     """
@@ -124,7 +124,7 @@ Feature: mysync handles zookeeper lost
     And I run command on host "mysql1" until result match regexp ".*OK.*" with timeout "90" seconds
     """
            mysql -s --skip-column-names -e "SELECT (CASE WHEN count(*) = 0 THEN 'OK' ELSE 'STILL_WAITING' END)
-                            FROM information_schema.PROCESSLIST
+                            FROM performance_schema.processlist
                             WHERE state = 'Waiting for semi-sync ACK from slave'"
     """
     When host "mysql1" is attached to the network
