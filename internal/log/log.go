@@ -163,3 +163,67 @@ func (l *Logger) Errorf(msg string, args ...interface{}) {
 func (l *Logger) Fatalf(msg string, args ...interface{}) {
 	l.printf(FATAL, msg, args...)
 }
+
+type Prefix string
+
+const (
+	RepairPrefix   = "repair"
+	RecoveryPrefix = "recovery"
+)
+
+type PrefixLogger struct {
+	prefix       string
+	sourceLogger *Logger
+}
+
+func NewPrefixLogger(logger *Logger, prefix string) *PrefixLogger {
+	return &PrefixLogger{
+		prefix:       prefix,
+		sourceLogger: logger,
+	}
+}
+
+func (l *PrefixLogger) Debug(msg string) {
+	l.sourceLogger.Debugf("%s: %s", l.prefix, msg)
+}
+
+func (l *PrefixLogger) Info(msg string) {
+	l.sourceLogger.Infof("%s: %s", l.prefix, msg)
+}
+
+func (l *PrefixLogger) Warn(msg string) {
+	l.sourceLogger.Warnf("%s: %s", l.prefix, msg)
+}
+
+func (l *PrefixLogger) Error(msg string) {
+	l.sourceLogger.Errorf("%s: %s", l.prefix, msg)
+}
+
+func (l *PrefixLogger) Fatal(msg string) {
+	l.sourceLogger.Fatalf("%s: %s", l.prefix, msg)
+}
+
+func (l *PrefixLogger) Debugf(msg string, args ...interface{}) {
+	msg = fmt.Sprintf("%s: %s", l.prefix, msg)
+	l.sourceLogger.Debugf(msg, args...)
+}
+
+func (l *PrefixLogger) Infof(msg string, args ...interface{}) {
+	msg = fmt.Sprintf("%s: %s", l.prefix, msg)
+	l.sourceLogger.Infof(msg, args...)
+}
+
+func (l *PrefixLogger) Warnf(msg string, args ...interface{}) {
+	msg = fmt.Sprintf("%s: %s", l.prefix, msg)
+	l.sourceLogger.Warnf(msg, args...)
+}
+
+func (l *PrefixLogger) Errorf(msg string, args ...interface{}) {
+	msg = fmt.Sprintf("%s: %s", l.prefix, msg)
+	l.sourceLogger.Errorf(msg, args...)
+}
+
+func (l *PrefixLogger) Fatalf(msg string, args ...interface{}) {
+	msg = fmt.Sprintf("%s: %s", l.prefix, msg)
+	l.sourceLogger.Fatalf(msg, args...)
+}
